@@ -6,4 +6,9 @@ ssh_authorized_keys:
   - ssh-rsa AAAAB3NzaC1yc2EAAAABJQAAAIEAiqwvWST0bHc8qKn1acg7BQXttmoCOlz1caN++dow2EbFBawsqw9KC7u8cHtBpKdLzZrJG/NyaowxVGfb2+ySKCSumpOnEypL2oIiEHAe4EaBqScQ9OEgETan0Xbll0+5ovG5DIbSQe97T+6xtWIYf1YaVZCcnf57t/4/aPN81jk=
 rancher:
   console: ubuntu
+  docker:
+    engine: docker-17.03.2-ce
+  state:
+    fstype: auto
+    dev: LABEL=RANCHER_STATE
 hostname: castor
