@@ -3,12 +3,21 @@ ssh_authorized_keys:
   - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC2QVBi8oUp8PV7pAhlZt6CB3jIgqP40Z3p0van3R1uVfe0533Z/3UUz/un3XGtzNyHZK8AZxtnfmfe7bnlFgHWYcpnYb4gS58oc1kUHeJDCAZ+63w9Ov0SYGvXraaN1V4Of4zOVv9vN329qM9drRpjugKzzr6VNI+hIlNCmzKw6JHEwhsl1LKc/7uEiaL1BxTqi9e2SHx1y6WCnlBFb8pRvbjxvSnneuwsLy0uzSFDoFIZILPD9TADvNXF12WDKuDjjMwQr5Ks2YQwX3jHb5IUIlquQropgXYYCXv3rw585o7xqxxjZU8sKKk8X5kxgRDu32L5CUOaGxkvIeTRExHb
   - ssh-rsa AAAAB3NzaC1yc2EAAAABJQAAAIEAiqwvWST0bHc8qKn1acg7BQXttmoCOlz1caN++dow2EbFBawsqw9KC7u8cHtBpKdLzZrJG/NyaowxVGfb2+ySKCSumpOnEypL2oIiEHAe4EaBqScQ9OEgETan0Xbll0+5ovG5DIbSQe97T+6xtWIYf1YaVZCcnf57t/4/aPN81jk=
 rancher:
+  cloud_init:
+    datasources:
+    - url:https://raw.githubusercontent.com/WritheM/rome-config/master/plebian/cloud-config.yml
   console: ubuntu
   docker:
     engine: docker-17.03.2-ce
-  state:
-    fstype: auto
-    dev: LABEL=RANCHER_STATE
+  environment:
+    EXTRA_CMDLINE: /init rancher.cloud_init.datasources=[url:https://raw.githubusercontent.com/WritheM/rome-config/master/plebian/cloud-config.yml]
+      initrd=../initrd-v1.4.2
   hypervisor_service: false
   resize_device: /dev/sda
+  services_include:
+    qemu-guest-agent: true
+  state:
+    dev: LABEL=RANCHER_STATE
+    fstype: auto
+    wait: true
 hostname: plebian
