@@ -11,4 +11,21 @@ rancher:
     dev: LABEL=RANCHER_STATE
   hypervisor_service: false
   resize_device: /dev/sda
+  network:
+    interfaces:
+      bond0:
+        addresses:
+        - 10.1.10.1/20
+        gateway: 10.1.1.1
+        bond_opts:
+          downdelay: "200"
+          lacp_rate: "1"
+          miimon: "100"
+          mode: "4"
+          updelay: "200"
+          xmit_hash_policy: layer3+4
+      mac=00:30:48:CD:14:26:
+        bond: bond0
+      mac=00:30:48:CD:14:27:
+        bond: bond0
 hostname: castor
