@@ -12,7 +12,7 @@ rancher:
       initrd=../initrd-v1.4.2
   console: ubuntu
   docker:
-    engine: docker-17.03.3-ce
+    engine: docker-17.03.2-ce
   state:
     fstype: auto
     dev: LABEL=RANCHER_STATE
