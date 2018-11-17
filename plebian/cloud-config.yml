@@ -23,3 +23,5 @@ rancher:
     fstype: auto
     wait: true
 hostname: plebian
+runcmd:
+  - apt update && apt install -y nfs-kernel-server
