@@ -38,3 +38,6 @@ rancher:
   services_include:
     kernel-headers: true
 hostname: castor
+runcmd:
+  - apt update && apt install -y nfs-kernel-server
+
