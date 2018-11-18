@@ -31,13 +31,13 @@ rancher:
           mode: "4"
           updelay: "200"
           xmit_hash_policy: layer3+4
-      mac=00:30:48:CD:15:72:
+      mac=00:25:90:1e:63:2c:
         bond: bond0
-      mac=00:30:48:CD:15:73:
+      mac=00:25:90:1e:63:2d:
         bond: bond0
   services_include:
     kernel-headers: true
 hostname: pollux
 runcmd:
-  - apt update && apt install -y nfs-kernel-server
+  - sudo apt update && sudo apt install -y nfs-kernel-server
 
