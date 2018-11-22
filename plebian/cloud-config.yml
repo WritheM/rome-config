@@ -23,5 +23,8 @@ rancher:
     fstype: auto
     wait: true
 hostname: plebian
-runcmd:
-  - apt update && apt install -y nfs-kernel-server
+mounts:
+ - [ "tmpfs", "/mnt/ramdisk", "tmpfs", "nodev,nosuid,noexec,nodiratime,size=10G" ]
+packages:
+ - nfs-kernel-server
+final_message: "The system is finally up, after $UPTIME seconds"
