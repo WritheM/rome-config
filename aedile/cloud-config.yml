@@ -25,5 +25,3 @@ rancher:
         address: 10.52.1.21
         netmask: 255.255.255.224
         dhcp: false
-packages:
- - nfs-kernel-server
