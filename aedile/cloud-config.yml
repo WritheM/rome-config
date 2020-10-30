@@ -19,9 +19,7 @@ rancher:
     wait: true
   network:
     interfaces:
-      "mac=00:22:06:00:10":
-        dhcp: true
-      "mac=00:22:06:00:11":
+      eth1:
         address: 10.52.1.21
         netmask: 255.255.255.224
         dhcp: false
