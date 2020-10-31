@@ -17,9 +17,11 @@ rancher:
     dev: LABEL=RANCHER_STATE
     fstype: auto
     wait: true
-  network:
-    interfaces:
-      eth1:
-        address: 10.52.1.21
-        netmask: 255.255.255.224
-        dhcp: false
+#  network:
+#    interfaces:
+#      eth0:
+#        dhcp: true
+#      eth1:
+#        address: 10.52.1.21
+#        netmask: 255.255.255.224
+#        dhcp: false
