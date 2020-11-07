@@ -9,7 +9,7 @@ rancher:
     - url:https://raw.githubusercontent.com/WritheM/rome-config/master/praetor/cloud-config.yml
   console: ubuntu
   docker:
-    engine: docker-17.03.2-ce
+    engine: docker-18.06.2-ce
   environment:
     EXTRA_CMDLINE: /init rancher.cloud_init.datasources=[url:https://raw.githubusercontent.com/WritheM/rome-config/master/praetor/cloud-config.yml]
       initrd=../initrd-v1.4.2
@@ -23,6 +23,8 @@ rancher:
     fstype: auto
     wait: true
 hostname: praetor
+mounts:
+ - [ "10.1.1.20:/export/mnt/freya", "/mnt/freya", "nfs", "nfsvers=4,nolock" ]
 packages:
  - nfs-kernel-server
 final_message: "The system is finally up, after $UPTIME seconds"
