@@ -8,6 +8,19 @@ rancher:
     datasources:
     - url:https://raw.githubusercontent.com/WritheM/rome-config/master/plebian/cloud-config.yml
   console: ubuntu
+  network:
+    interfaces:
+      eth0:
+        address: 10.1.1.200/20
+        dhcp: false
+        gateway: 10.1.1.1
+        mtu: 1500
+      eth1:
+        address: 10.52.1.200/24
+        dhcp: false
+        mtu: 1500
+  modules:
+    - nfs
   docker:
     engine: docker-18.06.2-ce
   hypervisor_service: false
