@@ -31,7 +31,7 @@ rancher:
   modules:
     - nfs
   services:
-    nfs:
+    freya:
       image: d3fk/nfs-client
       labels:
         io.rancher.os.after: console, preload-user-images
@@ -45,8 +45,22 @@ rancher:
       environment:
         SERVER: 10.1.1.20
         SHARE: /export/mnt/freya
+    thor:
+      image: d3fk/nfs-client
+      labels:
+        io.rancher.os.after: console, preload-user-images
+        io.rancher.os.scope: system
+      net: host
+      privileged: true
+      restart: always
+      volumes:
+      - /usr/bin/iptables:/sbin/iptables:ro
+      - /mnt/thor:/mnt/nfs-1:shared
+      environment:
+        SERVER: 10.1.1.20
+        SHARE: /export/mnt/thor     
   docker:
-    engine: docker-18.06.2-ce
+    engine: docker-17.03.2-ce
   environment:
     EXTRA_CMDLINE: /init rancher.cloud_init.datasources=[url:https://raw.githubusercontent.com/WritheM/rome-config/master/praetor/cloud-config.yml]
       initrd=../initrd-v1.4.2
@@ -62,6 +76,7 @@ rancher:
 hostname: praetor
 mounts:
  - [ "10.1.1.20:/export/mnt/freya", "/mnt/freya", "nfs", "" ]
+ - [ "10.1.1.20:/export/mnt/thor", "/mnt/thor", "nfs", "" ]
 packages:
  - nfs-kernel-server
 final_message: "The system is finally up, after $UPTIME seconds"
