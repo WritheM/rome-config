@@ -1,22 +1,29 @@
-#cloud-config
-
-# https://github.com/rancher/os/issues/641
-write_files:
-  - path: /etc/rc.local
-    permissions: "0755"
-    content: |
-      #!/bin/bash
-      [ ! -e /usr/bin/docker ] && ln -s /usr/bin/docker.dist /usr/bin/docker
-
-ssh_authorized_keys:
-  - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC2QVBi8oUp8PV7pAhlZt6CB3jIgqP40Z3p0van3R1uVfe0533Z/3UUz/un3XGtzNyHZK8AZxtnfmfe7bnlFgHWYcpnYb4gS58oc1kUHeJDCAZ+63w9Ov0SYGvXraaN1V4Of4zOVv9vN329qM9drRpjugKzzr6VNI+hIlNCmzKw6JH$
-  - ssh-rsa AAAAB3NzaC1yc2EAAAABJQAAAIEAiqwvWST0bHc8qKn1acg7BQXttmoCOlz1caN++dow2EbFBawsqw9KC7u8cHtBpKdLzZrJG/NyaowxVGfb2+ySKCSumpOnEypL2oIiEHAe4EaBqScQ9OEgETan0Xbll0+5ovG5DIbSQe97T+6xtWIYf1YaVZCcnf57t/4/aPN81jk=
-  - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQCj0YFDtbUgrvbQUDcfbWNZXk7yvBsSna3cB7vYsHFuprLtcBk5V5XvE6merk7i9FqrcrEsE0Y4gGjwszfw6BzuFe4b6ofj6eGzti/uppSpfKmCKvaKzWDKcwjQM5CYwZU+3RM7fRVF+UmlhbvCFiq6SvcK5tUMXtJP2qQFOtGdriv$
+final_message: The system is finally up, after $UPTIME seconds
+hostname: praetor
+mounts:
+- - 10.1.1.20:/export/mnt/freya
+  - /mnt/freya
+  - nfs
+  - ""
+- - 10.1.1.20:/export/mnt/thor
+  - /mnt/thor
+  - nfs
+  - ""
+packages:
+- nfs-kernel-server
 rancher:
   cloud_init:
     datasources:
     - url:https://raw.githubusercontent.com/WritheM/rome-config/master/praetor/cloud-config.yml
   console: ubuntu
+  docker:
+    engine: docker-18.06.2-ce
+  environment:
+    EXTRA_CMDLINE: /init rancher.cloud_init.datasources=[url:https://raw.githubusercontent.com/WritheM/rome-config/master/praetor/cloud-config.yml]
+      initrd=../initrd-v1.4.2
+  hypervisor_service: false
+  modules:
+  - nfs
   network:
     interfaces:
       eth0:
@@ -28,10 +35,12 @@ rancher:
         address: 10.52.1.205/24
         dhcp: false
         mtu: 1500
-  modules:
-    - nfs
+  resize_device: /dev/sda
   services:
     freya:
+      environment:
+        SERVER: 10.52.1.20
+        SHARE: /export/mnt/freya
       image: d3fk/nfs-client
       labels:
         io.rancher.os.after: console, preload-user-images
@@ -42,10 +51,10 @@ rancher:
       volumes:
       - /usr/bin/iptables:/sbin/iptables:ro
       - /mnt/freya:/mnt/nfs-1:shared
-      environment:
-        SERVER: 10.1.1.20
-        SHARE: /export/mnt/freya
     thor:
+      environment:
+        SERVER: 10.52.1.20
+        SHARE: /export/mnt/thor
       image: d3fk/nfs-client
       labels:
         io.rancher.os.after: console, preload-user-images
@@ -56,27 +65,20 @@ rancher:
       volumes:
       - /usr/bin/iptables:/sbin/iptables:ro
       - /mnt/thor:/mnt/nfs-1:shared
-      environment:
-        SERVER: 10.1.1.20
-        SHARE: /export/mnt/thor     
-  docker:
-    engine: docker-17.03.2-ce
-  environment:
-    EXTRA_CMDLINE: /init rancher.cloud_init.datasources=[url:https://raw.githubusercontent.com/WritheM/rome-config/master/praetor/cloud-config.yml]
-      initrd=../initrd-v1.4.2
-  hypervisor_service: false
-  resize_device: /dev/sda
   services_include:
-    qemu-guest-agent: true
     kernel-headers: true
+    qemu-guest-agent: true
   state:
     dev: LABEL=RANCHER_STATE
     fstype: auto
     wait: true
-hostname: praetor
-mounts:
- - [ "10.1.1.20:/export/mnt/freya", "/mnt/freya", "nfs", "" ]
- - [ "10.1.1.20:/export/mnt/thor", "/mnt/thor", "nfs", "" ]
-packages:
- - nfs-kernel-server
-final_message: "The system is finally up, after $UPTIME seconds"
+ssh_authorized_keys:
+- ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC2QVBi8oUp8PV7pAhlZt6CB3jIgqP40Z3p0van3R1uVfe0533Z/3UUz/un3XGtzNyHZK8AZxtnfmfe7bnlFgHWYcpnYb4gS58oc1kUHeJDCAZ+63w9Ov0SYGvXraaN1V4Of4zOVv9vN329qM9drRpjugKzzr6VNI+hIlNCmzKw6JH$
+- ssh-rsa AAAAB3NzaC1yc2EAAAABJQAAAIEAiqwvWST0bHc8qKn1acg7BQXttmoCOlz1caN++dow2EbFBawsqw9KC7u8cHtBpKdLzZrJG/NyaowxVGfb2+ySKCSumpOnEypL2oIiEHAe4EaBqScQ9OEgETan0Xbll0+5ovG5DIbSQe97T+6xtWIYf1YaVZCcnf57t/4/aPN81jk=
+- ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQCj0YFDtbUgrvbQUDcfbWNZXk7yvBsSna3cB7vYsHFuprLtcBk5V5XvE6merk7i9FqrcrEsE0Y4gGjwszfw6BzuFe4b6ofj6eGzti/uppSpfKmCKvaKzWDKcwjQM5CYwZU+3RM7fRVF+UmlhbvCFiq6SvcK5tUMXtJP2qQFOtGdriv$
+write_files:
+- content: |+
+    #!/bin/bash
+    [ ! -e /usr/bin/docker ] && ln -s /usr/bin/docker.dist /usr/bin/docker
+  path: /etc/rc.local
+  permissions: "0755"
