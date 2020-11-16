@@ -1,11 +1,11 @@
 final_message: The system is finally up, after $UPTIME seconds
 hostname: praetor
 mounts:
-- - 10.1.1.20:/export/mnt/freya
+- - 10.52.1.20:/export/mnt/freya
   - /mnt/freya
   - nfs
   - ""
-- - 10.1.1.20:/export/mnt/thor
+- - 10.52.1.20:/export/mnt/thor
   - /mnt/thor
   - nfs
   - ""
